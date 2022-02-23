@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
-@RequestMapping()
+@RequestMapping("/users")
 public class MainController {
 
     private final DotServiceImpl dotService;
@@ -29,50 +30,55 @@ public class MainController {
     }
 
     @GetMapping
-    public String index(@ModelAttribute("user") User user) {
-        return "sign_in";
+    public List<User> getUsers() {
+        return userService.getAll();
     }
 
-    @GetMapping("/sign_up")
-    public String getSignUp (@ModelAttribute("user") User user) {
-        return "sign_up";
-    }
-
-    @PostMapping("/sign_in")
-    public String signIn (@ModelAttribute("user") User user, Model model) {
-        String username = user.getUsername();
-        User dbUser = userService.getUserByUsername(username);
-
-        // username doesn't exist
-        if (dbUser == null) {
-            return "sign_in";
-        }
-        String dbPassword = dbUser.getPassword();
-        String password = user.getPassword();
-        String encryptedPassword = SHA384Coder.encryptPassword(password);
-
-        // password doesn't suit
-        if (!dbPassword.equals(encryptedPassword)) {
-            return "sign_in";
-        }
-        user.setPassword(encryptedPassword);
-        model.addAttribute("user", user);
-        return "/main";
-    }
-
-    @PostMapping("/sign_up")
-    public String singUp (@ModelAttribute User user, Model model) {
-        String username = user.getUsername();
-
-        if (userService.getUserByUsername(username) != null) {
-            return "sign_up";
-        }
-
-        String password = user.getPassword();
-        String encryptedPassword = SHA384Coder.encryptPassword(password);
-        user.setPassword(encryptedPassword);
-        model.addAttribute("user", user);
-        userService.addUser(user);
-        return "/main";
-    }
+//    @GetMapping
+//    public String index(@ModelAttribute("user") User user) {
+//        return "sign_in";
+//    }
+//
+//    @GetMapping("/sign_up")
+//    public String getSignUp (@ModelAttribute("user") User user) {
+//        return "sign_up";
+//    }
+//
+//    @PostMapping("/sign_in")
+//    public String signIn (@ModelAttribute("user") User user, Model model) {
+//        String username = user.getUsername();
+//        User dbUser = userService.getUserByUsername(username);
+//
+//        // username doesn't exist
+//        if (dbUser == null) {
+//            return "sign_in";
+//        }
+//        String dbPassword = dbUser.getPassword();
+//        String password = user.getPassword();
+//        String encryptedPassword = SHA384Coder.encryptPassword(password);
+//
+//        // password doesn't suit
+//        if (!dbPassword.equals(encryptedPassword)) {
+//            return "sign_in";
+//        }
+//        user.setPassword(encryptedPassword);
+//        model.addAttribute("user", user);
+//        return "/main";
+//    }
+//
+//    @PostMapping("/sign_up")
+//    public String singUp (@ModelAttribute User user, Model model) {
+//        String username = user.getUsername();
+//
+//        if (userService.getUserByUsername(username) != null) {
+//            return "sign_up";
+//        }
+//
+//        String password = user.getPassword();
+//        String encryptedPassword = SHA384Coder.encryptPassword(password);
+//        user.setPassword(encryptedPassword);
+//        model.addAttribute("user", user);
+//        userService.addUser(user);
+//        return "/main";
+//    }
 }
