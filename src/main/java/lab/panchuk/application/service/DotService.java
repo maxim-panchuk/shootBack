@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DotService {
     List<Dot> getAll();
+    void add(Dot dot);
 }
